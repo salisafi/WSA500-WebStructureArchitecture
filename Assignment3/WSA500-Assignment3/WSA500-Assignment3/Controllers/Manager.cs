@@ -4,7 +4,13 @@ using System.Linq;
 using System.Web;
 // new...
 using AutoMapper;
+// using AllHttpMethods.Models;
+using System.Web.Http;
+using System.Net.Http;
 using WSA500_Assignment3.Models;
+
+// using System.Data.Entity.Migrations;
+
 
 namespace WSA500_Assignment3.Controllers
 {
@@ -19,16 +25,22 @@ namespace WSA500_Assignment3.Controllers
 
         public Manager()
         {
-            // If necessary, add your own code here
-
             // Configure AutoMapper...
             config = new MapperConfiguration(cfg =>
             {
                 // Define the mappings below, for example...
                 // cfg.CreateMap<SourceType, DestinationType>();
-                // cfg.CreateMap<Employee, EmployeeBase>();
+
+                // Invoice entity mappers
+                 cfg.CreateMap<Models.Invoice, Controllers.InvoiceBase>();
 
 
+                // InvoiceLine entity mappers
+                 cfg.CreateMap<Models.InvoiceLine, Controllers.InvoiceLineBase>();
+
+                // Employee entity mappers
+                cfg.CreateMap<Models.Employee, Controllers.EmployeeBase>();
+                cfg.CreateMap<Models.Employee, Controllers.EmployeePhoto>();
             });
 
             mapper = config.CreateMapper();
@@ -49,25 +61,21 @@ namespace WSA500_Assignment3.Controllers
         // Ensure that the methods accept and deliver ONLY view model objects and collections
         // The collection return type is almost always IEnumerable<T>
 
-        // Suggested naming convention: Entity + task/action
-        // For example:
-        // ProductGetAll()
-        // ProductGetById()
-        // ProductAdd()
-        // ProductEdit()
-        // ProductDelete()
-
 
         // Method templates, used by the ExampleController class
 
-        public IEnumerable<string> ExampleGetAll()
+        public IEnumerable<InvoiceBase> InvoiceGetAll()
         {
-            return new List<string> { "hello", "world" };
+            return mapper.Map<IEnumerable<InvoiceBase>>(ds.Invoices);
         }
 
-        public string ExampleGetById(int id)
+        public InvoiceBase InvoiceGetById(int id)
         {
-            return $"id {id} was requested";
+            var o = ds.Invoices.Find(id);
+           // var o = ds.Invoices.Include(InvoiceLines).Find(id);
+
+            // Return the result, or null if not found
+            return (o == null) ? null : mapper.Map<InvoiceBase>(o);
         }
 
         public string ExampleAdd(string newItem)
@@ -86,8 +94,41 @@ namespace WSA500_Assignment3.Controllers
         }
 
 
+        public IEnumerable<InvoiceLineBase> InvoiceLineGetAll()
+        {
+            return mapper.Map<IEnumerable<InvoiceLineBase>>(ds.InvoiceLines);
+        }
 
 
+        public IEnumerable<EmployeeBase> EmployeeGetAll()
+        {
+            return mapper.Map<IEnumerable<EmployeeBase>>(ds.Employees);
+        }
+
+        public EmployeeBase EmployeeGetById(int id)
+        {
+            var o = ds.Employees.Find(id);
+
+            return (o == null) ? null :  mapper.Map<EmployeeBase>(o);
+        }
+
+        // Add employee
+        public EmployeeBase EmployeeAdd(EmployeeAdd newItem)
+        {
+            // Attempt to add the object
+            var addedItem = ds.Employees.Add(mapper.Map<Employee>(newItem));
+            ds.SaveChanges();
+
+            // Return the result, or null if there was an error
+            return (addedItem == null) ? null : mapper.Map<EmployeeBase>(addedItem);
+        }
+
+        public EmployeePhoto EmployeePhotoGetById(int id)
+        {
+            var o = ds.Employees.Find(id);
+
+            return (o == null) ? null : mapper.Map<EmployeePhoto>(o);
+        }
 
         // Programmatically-generated objects
 

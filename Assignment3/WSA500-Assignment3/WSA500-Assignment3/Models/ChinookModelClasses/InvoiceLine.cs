@@ -24,4 +24,4 @@ namespace WSA500_Assignment3.Models
 
         public virtual Track Track { get; set; }
     }
-}
+}  

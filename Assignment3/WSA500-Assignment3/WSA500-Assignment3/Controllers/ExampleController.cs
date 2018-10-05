@@ -15,7 +15,7 @@ namespace WSA500_Assignment3.Controllers
         // GET: api/Example
         public IHttpActionResult Get()
         {
-            return Ok(m.ExampleGetAll());
+            return Ok(m.InvoiceGetAll());
         }
 
         // GET: api/Example/5

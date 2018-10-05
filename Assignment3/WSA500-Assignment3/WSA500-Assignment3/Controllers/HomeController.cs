@@ -13,7 +13,7 @@ namespace WSA500_Assignment3.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Main Page";
 
             return View();
         }

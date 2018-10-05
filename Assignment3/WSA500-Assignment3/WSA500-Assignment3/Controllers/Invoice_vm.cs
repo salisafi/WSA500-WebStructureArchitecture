@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WSA500_Assignment3.Controllers
 {
     public class InvoiceAdd
     {
         public InvoiceAdd(){
-            DateTime InvoiceDate = new DateTime().now;
+            InvoiceDate = new DateTime();
         }
-
-        public int CustomerId { get; set; }
-
-        public DateTime InvoiceDate { get; set; }
 
         [StringLength(70)]
         public string BillingAddress { get; set; }
@@ -22,13 +20,17 @@ namespace WSA500_Assignment3.Controllers
         public string BillingCity { get; set; }
 
         [StringLength(40)]
-        public string BillingState { get; set; }
-
-        [StringLength(40)]
         public string BillingCountry { get; set; }
 
         [StringLength(10)]
         public string BillingPostalCode { get; set; }
+
+        [StringLength(40)]
+        public string BillingState { get; set; }
+
+        public int CustomerId { get; set; }
+
+        public DateTime InvoiceDate { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal Total { get; set; }
@@ -41,16 +43,16 @@ namespace WSA500_Assignment3.Controllers
 
     public class InvoiceWithCustomer : InvoiceAdd
     {
-        [Required]
-        public Customer Customer { get; set; }
+       [Required]
+       public CustomerBase Customer { get; set; }
     }
 
     public class InvoiceWithInvoiceLine : InvoiceAdd
     {
         public InvoiceWithInvoiceLine()
         {
-            public List<InvoiceLine> InvoiceLines = new List<InvoiceLine>();
+            InvoiceLines = new List<InvoiceLineBase>();
         }
-        public IEnumerable<InvoiceLine> InvoiceLines { get; set; }
+        public IEnumerable<InvoiceLineBase> InvoiceLines { get; set; }
     }
 }
