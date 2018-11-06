@@ -98,14 +98,23 @@ namespace Assignment4_WSA500.Controllers
     /// </summary>
     public class InvoiceWithCustomerInfo : InvoiceBase
     {
+        /// <summary>
+        /// Customer first name
+        /// </summary>
         [Required, StringLength(40)]
         public string CustomerFirstName { get; set; }
+        /// <summary>
+        /// Customer last name
+        /// </summary>
 
         [Required, StringLength(20)]
         public string CustomerLastName { get; set; }
+        /// <summary>
+        /// Customer company name
+        /// </summary>
 
         [StringLength(80)]
         public string CustomerCompany { get; set; }
 
-    } 
+    }
 }

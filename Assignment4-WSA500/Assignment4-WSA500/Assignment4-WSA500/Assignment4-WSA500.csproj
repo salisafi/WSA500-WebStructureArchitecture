@@ -167,8 +167,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AlbumsApiController.cs" />
     <Compile Include="Controllers\AlbumsController.cs" />
     <Compile Include="Controllers\Album_vm.cs" />
+    <Compile Include="Controllers\Artist_vm.cs" />
     <Compile Include="Controllers\CreateErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceLinesController.cs" />
@@ -177,10 +179,10 @@
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\Invoice_vm.cs" />
     <Compile Include="Controllers\Manager.cs" />
+    <Compile Include="Controllers\MediaTypeExample.cs" />
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\TracksController.cs" />
     <Compile Include="Controllers\Track_vm.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

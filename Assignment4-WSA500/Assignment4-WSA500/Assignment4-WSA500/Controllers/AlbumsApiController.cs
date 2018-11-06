@@ -54,7 +54,7 @@ namespace Assignment4_WSA500.Controllers.Api
             }
         }
 
-        // Get one, with associated object, use attribute routing
+/*        // Get one, with associated object, use attribute routing
 
         // GET: api/AlbumsApi/5/WithTrack
         /// <summary>
@@ -79,7 +79,7 @@ namespace Assignment4_WSA500.Controllers.Api
                 return Ok(o);
             }
         }
-
+*/
         // POST: api/AlbumsApi
         public void Post([FromBody]string value)
         {

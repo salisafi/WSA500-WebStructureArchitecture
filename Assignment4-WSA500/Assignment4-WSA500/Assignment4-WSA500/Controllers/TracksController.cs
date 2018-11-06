@@ -49,31 +49,8 @@ namespace Assignment4_WSA500.Controllers
                 return Ok(o);
             }
         }
-/*
-        /// <summary>
-        /// Specific Track, using its identifier
-        /// </summary>
-        /// <param name="id">Tracks identifier</param>
-        /// <returns>Tracks object</returns>
-        // GET: api/Tracks/5/WithEmployee
-        [Route("api/Tracks/{id}/withAlbum")]
-        public IHttpActionResult GetwithAlbum(int? id)
-        {
-            // Attempt to locate the matching object
-            var o = m.TrackGetOnewithAlbum(id.GetValueOrDefault(id.GetValueOrDefault()));
 
-            // Continue?
-            if (o == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(o);
-            }
-        }
 
-*/
         // POST: api/Tracks
         /// <summary>
         /// Add new Track

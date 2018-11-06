@@ -27,15 +27,20 @@ namespace Assignment4_WSA500.Controllers
                 // Define the mappings below, for example...
                 // cfg.CreateMap<SourceType, DestinationType>();
 
-                 cfg.CreateMap<Models.Invoice, Controllers.InvoiceBase>();
+                // ##########################       Invoice         ##################################
+                cfg.CreateMap<Models.Invoice, Controllers.InvoiceBase>();
                 cfg.CreateMap<Models.Invoice, Controllers.InvoiceWithInvoiceLines>();
                 cfg.CreateMap<Models.Invoice, Controllers.InvoiceWithCustomerInfo>();
                 cfg.CreateMap<Controllers.InvoiceAdd, Models.Invoice>();
 
+                // ##########################       Track         ##################################
                 cfg.CreateMap<Models.Track, Controllers.TrackBase>();
 
-
+                // ##########################       Album         ##################################
                 cfg.CreateMap<Models.Album, Controllers.AlbumBase>();
+                cfg.CreateMap<Models.Album, Controllers.AlbumByIdWithTracks>();
+                cfg.CreateMap<Controllers.AlbumAdd, Models.Album>();
+                cfg.CreateMap<Models.Album, Controllers.AlbumWithArtist>();
 
 
             });
@@ -59,24 +64,18 @@ namespace Assignment4_WSA500.Controllers
         // The collection return type is almost always IEnumerable<T>
 
         // Suggested naming convention: Entity + task/action
-        // For example:
-        // ProductGetAll()
-        // ProductGetById()
-        // ProductAdd()
-        // ProductEdit()
-        // ProductDelete()
 
-
+        // ##########################       Invoice         ##################################
         // Invoice get all  - First 10 object
         public IEnumerable<InvoiceBase> InvoiceGetAll()
         {
-            return mapper.Map<IEnumerable<InvoiceBase>>(ds.Invoices.Take(10));
+            return mapper.Map<IEnumerable<InvoiceBase>>(ds.Invoices.Take(20));
         }
 
         // Invoice get all  - First 10 object
         public IEnumerable<InvoiceLineBase> InvoiceLineGetAll()
         {
-            return mapper.Map<IEnumerable<InvoiceLineBase>>(ds.InvoiceLines.Take(10));
+            return mapper.Map<IEnumerable<InvoiceLineBase>>(ds.InvoiceLines.Take(20));
         }
 
           // Invoice get all - Customer first name, Customer last name
@@ -84,8 +83,7 @@ namespace Assignment4_WSA500.Controllers
             {
             //return mapper.Map<IEnumerable<InvoiceWithCustomerInfo>>(ds.Invoices.Include("Customers").OrderBy(p => p.InvoiceId));
             // Attention 17 - Fetch players, notice that we "include" the team object
-            var c = ds.Invoices
-                .Include("Customer");
+            var c = ds.Invoices.Include("Customer").Take(20);
 
             // The mapper returns the whole team object with the results
             return mapper.Map<IEnumerable<InvoiceWithCustomerInfo>>(c);
@@ -172,19 +170,10 @@ namespace Assignment4_WSA500.Controllers
 
         public bool LoadData()
         {
-            /*
-            // Return immediately if there's existing data
-            if (ds.[entity collection].Courses.Count() > 0) { return false; }
-
-            // Otherwise, add objects...
-
-            ds.[entity collection].Add(new [whatever] { Property1 = "value", Property2 = "value" });
-            */
-
             return ds.SaveChanges() > 0 ? true : false;
         }
 
-
+        // ##########################       Track         ##################################
         // Track get all  
         public IEnumerable<TrackBase> TracksGetAll()
         {
@@ -202,20 +191,7 @@ namespace Assignment4_WSA500.Controllers
             // throw new NotImplementedException();
         }
 
-  /*      // Track get one with associated object
-
-        public TrackWithAlbum CustomerGetByIdWithEmployee(int id)
-        {
-            // Attempt to fetch the object
-            var o = ds.Customers.Include("Employee")
-                .SingleOrDefault(c => c.CustomerId == id);
-
-            return (o == null) ? null : mapper.Map<CustomerWithEmployee>(o);
-        }
-
-*/
         // Add a Track
-
         public TrackBase TrackAdd(TrackAdd newItem)
         {
             // To add a Track, 
@@ -265,12 +241,11 @@ namespace Assignment4_WSA500.Controllers
             }
         }
 
-        /****************      Albums     ****************************/
+        // ##########################       Albums         ##################################     
         public IEnumerable<AlbumBase> AlbumGetAll()
         {
             return mapper.Map<IEnumerable<AlbumBase>>(ds.Albums);
         }
-
 
         public AlbumBase AlbumGetById(int id)
         {
@@ -279,5 +254,86 @@ namespace Assignment4_WSA500.Controllers
 
             return (o == null) ? null : mapper.Map<AlbumBase>(o);
         }
+
+        public AlbumByIdWithTracks AlbumGetByIdWithTracks(int id)
+        {
+            // Attempt to fetch the object
+
+            // Attention 17 - Notice that you must use SingleOrDefault() - cannot use Find()
+
+            var o = ds.Albums.Include("Tracks").SingleOrDefault(e => e.AlbumId == id);
+
+            return (o == null) ? null : mapper.Map<AlbumByIdWithTracks>(o);
+        }
+
+
+        public AlbumWithArtist AlbumGetByIdWithArtist(int id)
+        {
+            var o = ds.Albums.Include("Artist").SingleOrDefault(e => e.AlbumId == id);
+
+            return (o == null) ? null : mapper.Map<AlbumWithArtist>(o);
+        }
+
+
+        public AlbumBase AlbumAdd(AlbumAdd newItem)
+        {
+            var addedAlbum = ds.Albums.Add(mapper.Map<Album>(newItem));
+            ds.SaveChanges();
+
+            // Return the result, or null if there was an error
+            return (addedAlbum == null) ? null : mapper.Map<AlbumBase>(addedAlbum);
+        }
+
+        public AlbumBase EditAlbum(AlbumEdit editedItem)
+        {
+
+            // Ensure that we can continue
+            if (editedItem == null) { return null; }
+
+            // Attempt to fetch the object
+            var currentAlbum = ds.Albums.Find(editedItem.AlbumId);
+
+            if (currentAlbum == null)
+            {
+                return null;
+            }
+            else
+            {
+                // Fetch the object from the data store - ds.Entry(storedItem)
+                // Get its current values collection - .CurrentValues
+                // Set those to the edited values - .SetValues(editedItem)
+                ds.Entry(currentAlbum).CurrentValues.SetValues(editedItem);
+                // The SetValues() method ignores missing properties and navigation properties
+                ds.SaveChanges();
+
+                return mapper.Map<AlbumEdit>(currentAlbum);
+            }
+        }
+
+        public void AlbumeDelete(int id)
+        {
+            var storedItem = ds.Albums.Find(id);
+
+            // Interim coding strategy...
+
+            if (storedItem == null)
+            {
+                // Throw an exception, and you will learn how soon
+            }
+            else
+            {
+                try
+                {
+                    // If this fails, throw an exception (as above)
+                    // This implementation just prevents an error from bubbling up
+                    ds.Albums.Remove(storedItem);
+                    ds.SaveChanges();
+                }
+                catch (Exception) { }
+            }
+        }
+
+
+
     }
 }

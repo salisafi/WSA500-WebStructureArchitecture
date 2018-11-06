@@ -27,6 +27,9 @@ namespace Assignment4_WSA500
             // Add ByteFormatter to the pipeline
             config.Formatters.Add(new ServiceLayer.ByteFormatter());
 
+            // Add HRFormatter to the pipeline
+            config.Formatters.Add(new ServiceLayer.HRFormatterICT());
+
             // Add HandleError to the pipeline
             config.Services.Replace(typeof(IExceptionHandler), new ServiceLayer.HandleError());
 
